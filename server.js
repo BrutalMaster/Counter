@@ -10,13 +10,27 @@ let db = new sqlite3.Database(':memory:', (err) => {
         return console.error(err.message);
     }
     console.log('Connected to the in-memory SQlite database.');
+
+    // Create table
+    db.run('CREATE TABLE counter (count INTEGER)', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+
+        // Initialize counter
+        db.run('INSERT INTO counter(count) VALUES(?)', [0], (err) => {
+            if (err) {
+                return console.error(err.message);
+            }
+        });
+    });
 });
 
 // Create table
-db.run('CREATE TABLE counter (count INTEGER)');
+// db.run('CREATE TABLE counter (count INTEGER)');
 
 // Initialize counter
-db.run('INSERT INTO counter(count) VALUES(?)', [0]);
+// db.run('INSERT INTO counter(count) VALUES(?)', [0]);
 
 app.use(cors());
 
