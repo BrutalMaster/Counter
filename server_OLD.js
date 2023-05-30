@@ -5,30 +5,22 @@ const cors = require('cors');
 const app = express();
 
 // Connect to SQLite database
-let db = new sqlite3.Database('./counter.db', (err) => {
+let db = new sqlite3.Database(':memory:', (err) => {
     if (err) {
         return console.error(err.message);
     }
     console.log('Connected to the in-memory SQlite database.');
 
     // Create table
-    db.run('CREATE TABLE IF NOT EXISTS counter (count INTEGER)', (err) => {
+    db.run('CREATE TABLE counter (count INTEGER)', (err) => {
         if (err) {
             return console.error(err.message);
         }
 
         // Initialize counter
-        db.get('SELECT count FROM counter', [], (err, row) => {
+        db.run('INSERT INTO counter(count) VALUES(?)', [0], (err) => {
             if (err) {
                 return console.error(err.message);
-            }
-
-            if(!row) {
-                db.run('INSERT INTO counter(count) VALUES(?)', [0], (err) => {
-                    if (err) {
-                        return console.error(err.message);
-                    }
-                });
             }
         });
     });
